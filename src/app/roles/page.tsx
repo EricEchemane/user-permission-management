@@ -1,6 +1,18 @@
+import { EPermissions } from '@/constants/permissions';
 import { prisma } from '@/prisma';
+import { redirect } from 'next/navigation';
 
 async function getRoles() {
+  const user = await prisma.user.findUnique({
+    where: {
+      username: 'enginex',
+      role: {
+        permissions: { some: { name: EPermissions.RolesRead } },
+      },
+    },
+  });
+  if (!user) redirect('/');
+
   return prisma.role.findMany({
     include: {
       permissions: true,
