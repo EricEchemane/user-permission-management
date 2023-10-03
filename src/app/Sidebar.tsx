@@ -17,6 +17,9 @@ export default function Sidebar(props: { permissions: string[] }) {
         {permissions.has(EPermissions.BankEdit) && (
           <Link href={'/edit'}> Bank Edit </Link>
         )}
+        {permissions.has(EPermissions.RolesRead) && (
+          <Link href={'/roles'}> Roles </Link>
+        )}
       </ul>
     </aside>
   );

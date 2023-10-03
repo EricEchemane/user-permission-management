@@ -6,7 +6,9 @@ async function getReadData() {
   const user = await prisma.user.findUnique({
     where: {
       username: 'enginex',
-      permissions: { some: { name: EPermissions.BankRead } },
+      role: {
+        permissions: { some: { name: EPermissions.BankRead } },
+      },
     },
   });
   if (!user) redirect('/');
