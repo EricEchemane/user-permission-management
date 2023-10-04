@@ -3,6 +3,7 @@ import { prisma } from '@/prisma';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import Sidebar from './Sidebar';
+import { getServerSession } from 'next-auth';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -12,8 +13,11 @@ export const metadata: Metadata = {
 };
 
 async function getPermissions(): Promise<string[]> {
+  const session = await getServerSession();
+  if (!session?.user?.name) return [];
+
   const user = await prisma.user.findUnique({
-    where: { username: 'enginex' },
+    where: { username: session.user.name },
     include: {
       role: {
         include: {

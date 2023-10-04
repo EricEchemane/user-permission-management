@@ -1,11 +1,10 @@
 'use client';
 
 import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { ElementRef, FormEvent, useRef, useState } from 'react';
 
 export default function LoginPage() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -29,7 +28,7 @@ export default function LoginPage() {
     }
 
     const redirectTo = searchParams.get('redirect-to') ?? '/';
-    router.replace(redirectTo);
+    window.location.href = window.location.origin + redirectTo;
   }
   return (
     <form onSubmit={login} className='max-w-sm m-auto p-7 grid gap-8'>
