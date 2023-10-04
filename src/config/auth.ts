@@ -23,7 +23,7 @@ export const authOptions: AuthOptions = {
         if (!user || credentials?.password !== user.password) return null;
 
         return {
-          id: user.id,
+          id: user.id.toString(),
           name: user.username,
           permissions: user?.role.permissions.map(
             (permission) => permission.name
