@@ -1,11 +1,12 @@
 import { EPermissions } from '@/constants/permissions';
 import Link from 'next/link';
+import LogoutButton from './Logout';
 
 export default function Sidebar(props: { permissions: string[] }) {
   const permissions = new Set(props.permissions);
 
   return (
-    <aside className='p-4 border-r h-screen'>
+    <aside className='p-4 border-r h-screen flex flex-col'>
       <h2 className='mb-7'>Backoffice</h2>
       <ul className='space-y-2 grid'>
         {permissions.has(EPermissions.BankRead) && (
@@ -21,6 +22,7 @@ export default function Sidebar(props: { permissions: string[] }) {
           <Link href={'/roles'}> Roles </Link>
         )}
       </ul>
+      <LogoutButton />
     </aside>
   );
 }

@@ -1,19 +1,18 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { routePermissions } from './config/route-permissions';
 
 export async function middleware(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
+  if (pathname === '/login') {
+    return NextResponse.next();
+  }
 
   const token = await getToken({
     req: request,
     secret: process.env.SECRET,
   });
-
-  if (pathname === '/login') {
-    return token ? NextResponse.redirect(request.url) : NextResponse.next();
-  }
-
   if (!token) {
     const destination = `${pathname}?${searchParams.toString()}`;
     const response = NextResponse.redirect(
@@ -25,8 +24,20 @@ export async function middleware(request: NextRequest) {
     return response;
   }
 
-  const response = NextResponse.next();
-  return response;
+  const restrictedRoute = routePermissions.find(
+    (route) => route.path === pathname
+  );
+  // do nothing if not restricted
+  if (!restrictedRoute) return NextResponse.next();
+
+  const userPermissions = new Set(token.permissions);
+  const permitted = userPermissions.has(restrictedRoute.permission);
+  if (!permitted) {
+    const response = NextResponse.redirect(new URL('/', request.url));
+    return response;
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
