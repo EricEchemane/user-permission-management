@@ -5,6 +5,8 @@ import { Inter } from 'next/font/google';
 import Sidebar from './Sidebar';
 import { getServerSession } from 'next-auth';
 
+export const runtime = 'nodejs';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {

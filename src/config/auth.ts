@@ -13,14 +13,21 @@ export const authOptions: AuthOptions = {
       async authorize(credentials) {
         const user = await prisma.user.findUnique({
           where: { username: credentials?.username },
+          include: {
+            role: {
+              include: { permissions: true },
+            },
+          },
         });
 
         if (!user || credentials?.password !== user.password) return null;
 
         return {
-          id: user.id.toString(),
+          id: user.id,
           name: user.username,
-          email: 'eechemane29@gmail.com',
+          permissions: user?.role.permissions.map(
+            (permission) => permission.name
+          ),
         };
       },
     }),
@@ -29,4 +36,10 @@ export const authOptions: AuthOptions = {
     maxAge: 1400,
   },
   secret: process.env.NEXTAUTH_SECRET,
+  callbacks: {
+    async jwt({ token, user }) {
+      token.permissions = user?.permissions;
+      return token;
+    },
+  },
 };
