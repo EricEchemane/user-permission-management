@@ -1,3 +1,10 @@
+import SearchComponent from './Search';
+
 export default function HomePage() {
-  return <div>HomePage</div>;
+  return (
+    <div>
+      <SearchComponent />
+      <h1>HomePage</h1>
+    </div>
+  );
 }
